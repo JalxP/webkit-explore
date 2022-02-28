@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <script>
+            function handleSuccess(message){
+                document.getElementById("messageFromNative").innerHTML = message;
+            }
+            function handleError(error){
+                console.log(error);
+            }
+            
+            function sayHelloToNative() {
+                window.webkit.messageHandlers.gbMessageHandler.postMessage("Hello, from JavaScript!");
+            }
+            
+            function sayHelloToNativeWithReply() {
+                var promise = window.webkit.messageHandlers.gbMessageHandlerWithReply.postMessage("Hello, from JavaScript!");
+                
+                promise.then(
+                             function(message) {
+                                 document.getElementById("messageFromNative").innerHTML = message;
+                             },
+                             function(error) {
+                                 console.log("Error — " + error);
+                             });
+                
+            }
+        </script>
+    </head>
+    
+    <body>
+        <h2>Message Received</h2>
+        <textarea id="messageFromNative">message from native here...</textarea>
+        </br>
+<!--        <button onclick="sayHelloToNative()">Send message to native</button>-->
+        <button onclick="sayHelloToNativeWithReply()">Send message to native and get reply</button>
+        </br>
+        <button onclick="injectedMethod('Hello, from JavaScript!', handleSuccess, handleError)">Send message to native and get reply using injected method</button>
+    </body>
+</html>
